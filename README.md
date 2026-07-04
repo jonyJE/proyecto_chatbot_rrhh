@@ -357,7 +357,8 @@ proyecto_chatbot_rrhh/
 
 **Desarrollador**
 
-**Tu Nombre Completo**
+**Jonathan Infanzon**
+**Angel Nepo**
 
 AI Engineer • Data Scientist
 
