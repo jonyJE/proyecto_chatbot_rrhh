@@ -320,9 +320,7 @@ proyecto_chatbot_rrhh/
 
 ├── README.md
 
-├── manual_rrhh_novatech.pdf
-
-└── Manual_Empleado.pdf
+└──manual_rrhh_novatech.pdf
 
 ```
 
