@@ -1,6 +1,3 @@
 .env
 venv/
 __pycache__/
-.env_openai
-app_openai.py
-requirements_openai.txt
