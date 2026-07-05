@@ -6,7 +6,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
+
+# 1. NUEVAS IMPORTACIONES PARA LA MEMORIA
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage, AIMessage
 
 # Importaciones oficiales para la Arquitectura Corporativa de Azure
 from langchain_openai import AzureChatOpenAI
@@ -35,14 +38,12 @@ def iniciar_rag_azure():
     retriever = vectorstore.as_retriever()
     
     # 3. Configuración del Motor de Inferencia (Azure OpenAI Service)
-    # Definición formal de variables requeridas por el SDK empresarial de Microsoft
     endpoint = os.getenv("AZURE_OPENAI_ENDPOINT", "")
     api_key = os.getenv("AZURE_OPENAI_API_KEY", "")
     deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o-mini-deployment")
     
-    # Sistema Híbrido de Contingencia Inteligente (Garantiza resiliencia en la Demo)
+    # Sistema Híbrido de Contingencia Inteligente
     if endpoint and api_key:
-        # Inicialización oficial nativa de Azure OpenAI
         llm = AzureChatOpenAI(
             azure_endpoint=endpoint,
             api_key=api_key,
@@ -51,10 +52,9 @@ def iniciar_rag_azure():
             temperature=0
         )
     else:
-        # Backend de respaldo gratuito (Groq / Llama 3.1) ante cuotas agotadas en entorno educativo
         llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0)
     
-    # 4. Diseño del Prompt Corporativo Estricto para Mitigar Alucinaciones
+    # 4. Diseño del Prompt (AHORA CON MEMORIA INYECTADA)
     system_prompt = (
         "Eres un asistente virtual de Recursos Humanos para la empresa NovaTech Solutions, "
         "desplegado mediante los servicios cognitivos de Microsoft Azure AI. "
@@ -66,13 +66,15 @@ def iniciar_rag_azure():
         "{context}"
     )
     
-    prompt = ChatPromptTemplate.from_messages([
+    # Añadimos MessagesPlaceholder para que el LLM reciba el contexto de la charla
+    qa_prompt = ChatPromptTemplate.from_messages([
         ("system", system_prompt),
+        MessagesPlaceholder(variable_name="chat_history"),
         ("human", "{input}"),
     ])
     
     # 5. Ensamblaje de la cadena RAG End-to-End
-    question_answer_chain = create_stuff_documents_chain(llm, prompt)
+    question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
     rag_chain = create_retrieval_chain(retriever, question_answer_chain)
     
     return rag_chain
@@ -88,16 +90,32 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Captura y procesamiento del flujo de la conversación
-if prompt := st.chat_input("Ej: ¿Cuál es el canal oficial para reportar un conflicto de acoso?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# Captura y procesamiento del flujo de la conversación (Cambio de nombre de variable a user_question)
+if user_question := st.chat_input("Ej: ¿Cuál es el canal oficial para reportar un conflicto de acoso?"):
+    
+    # Guardamos y mostramos la pregunta del usuario en la pantalla
+    st.session_state.messages.append({"role": "user", "content": user_question})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.markdown(user_question)
+
+    # 6. TRADUCCIÓN DEL HISTORIAL: Convertimos la memoria de Streamlit al formato de LangChain
+    chat_history = []
+    # Usamos [:-1] para pasarle todo el historial EXCEPTO la pregunta actual (que viaja en 'input')
+    for msg in st.session_state.messages[:-1]:
+        if msg["role"] == "user":
+            chat_history.append(HumanMessage(content=msg["content"]))
+        else:
+            chat_history.append(AIMessage(content=msg["content"]))
 
     with st.chat_message("assistant"):
         with st.spinner("Consultando base de conocimiento indexada en Azure AI Search..."):
-            response = rag_chain.invoke({"input": prompt})
+            # 7. INVOCACIÓN CON MEMORIA: Le pasamos la pregunta y todo el historial
+            response = rag_chain.invoke({
+                "input": user_question,
+                "chat_history": chat_history
+            })
             answer = response["answer"]
             st.markdown(answer)
     
+    # Guardamos la respuesta del bot en la pantalla
     st.session_state.messages.append({"role": "assistant", "content": answer})
