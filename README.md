@@ -8,7 +8,6 @@ Se ha desarrollado un **Asistente Virtual con Arquitectura RAG (Retrieval-Augmen
 >
 > 🔗 **[Probar la aplicación en Streamlit Cloud](https://proyectochatbotrrhh-r3h5fvj7aw5jv2wpz8qlkf.streamlit.app)**
 >
-> > **Nota:** Reemplaza esta URL por el enlace real de tu aplicación desplegada.
 
 ---
 
@@ -270,7 +269,7 @@ El asistente fue validado utilizando diferentes escenarios.
 
 **Respuesta**
 
-> USD 500 por año.
+> S/. 500 por año.
 
 ---
 
@@ -284,7 +283,7 @@ El asistente fue validado utilizando diferentes escenarios.
 
 **Respuesta**
 
-> 20 días hábiles.
+> 30 días.
 
 ---
 
@@ -357,8 +356,8 @@ proyecto_chatbot_rrhh/
 
 **Desarrollador**
 
-**Jonathan Infanzon**
-**Angel Nepo**
+**Infanzon Castro Jonathan**
+**Nepo Chavez Angel Arturo**
 
 AI Engineer • Data Scientist
 
@@ -383,7 +382,3 @@ Este proyecto fue desarrollado con fines académicos como parte del **Proyecto I
 El contenido del Manual del Empleado corresponde a una empresa ficticia (**NovaTech Solutions**) creada exclusivamente para fines educativos y de demostración tecnológica.
 
 ---
-
-## ⭐ Si este proyecto te resultó interesante...
-
-¡No olvides dejar una ⭐ en el repositorio!
