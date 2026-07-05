@@ -356,8 +356,7 @@ proyecto_chatbot_rrhh/
 
 **Desarrollador**
 
-**Infanzon Castro Jonathan**
-
+**Infanzon Castro Jonathan** <br>
 **Nepo Chavez Angel Arturo**
 
 AI Engineer • Data Scientist
